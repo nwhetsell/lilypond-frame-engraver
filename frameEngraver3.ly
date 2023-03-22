@@ -1,4 +1,4 @@
-\version "2.15.30"
+\version "2.22.0"
 
 %% the following two definitions create custom properties, on the model of `define-grob-properties.scm'
 %% thanks, Harm and Arnold
