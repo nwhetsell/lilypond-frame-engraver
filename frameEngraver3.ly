@@ -24,10 +24,7 @@
 %% Thanks, Mike
 
 #(define-event-class 'frame-event
-   '(frame-event
-     span-event
-     music-event
-     StreamEvent))
+   'span-event)
 
 #(define frame-types
    '(
