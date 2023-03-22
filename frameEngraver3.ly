@@ -53,31 +53,6 @@
 #(set! music-descriptions
        (sort music-descriptions alist<?))
 
-#(define (add-grob-definition grob-name grob-entry)
-   (let* ((meta-entry   (assoc-get 'meta grob-entry))
-          (class        (assoc-get 'class meta-entry))
-          (ifaces-entry (assoc-get 'interfaces meta-entry)))
-     (set-object-property! grob-name 'translation-type? list?)
-     (set-object-property! grob-name 'is-grob? #t)
-     (set! ifaces-entry (append (case class
-                                  ((Item) '(item-interface))
-                                  ((Spanner) '(spanner-interface))
-                                  ((Paper_column) '((item-interface
-                                                     paper-column-interface)))
-                                  ((System) '((system-interface
-                                               spanner-interface)))
-                                  (else '(unknown-interface)))
-                                ifaces-entry))
-     (set! ifaces-entry (uniq-list (sort ifaces-entry symbol<?)))
-     (set! ifaces-entry (cons 'grob-interface ifaces-entry))
-     (set! meta-entry (assoc-set! meta-entry 'name grob-name))
-     (set! meta-entry (assoc-set! meta-entry 'interfaces
-                                  ifaces-entry))
-     (set! grob-entry (assoc-set! grob-entry 'meta meta-entry))
-     (set! all-grob-descriptions
-           (cons (cons grob-name grob-entry)
-                 all-grob-descriptions))))
-
 #(define (frame-stencil grob)
   (let* ((elts (ly:grob-object grob 'elements))
          (extender-length (ly:grob-property grob 'extender-length))
@@ -121,7 +96,14 @@
       (cons (- (car axis-group-width) 0.3 box-padding) (car axis-group-width))
       (cons (cdr axis-group-width) (+ (cdr axis-group-width) extender-length 0.3 box-padding correction)))))
 
-#(add-grob-definition
+% https://extending-lilypond.readthedocs.io/en/latest/properties-types.html#new-grob-type
+#(define (define-grob! grob-name grob-entry)
+   (set! all-grob-descriptions
+         (cons ((@@ (lily) completize-grob-entry)
+                (cons grob-name grob-entry))
+               all-grob-descriptions)))
+
+#(define-grob!
   'Frame
   `(
     (extra-padding . (0 . 0))
@@ -130,7 +112,7 @@
     (meta . ((class . Spanner)
              (interfaces . (line-interface))))))
 
-#(add-grob-definition
+#(define-grob!
   'FrameStub
   `(
     (X-extent . ,frame-stub::width)
