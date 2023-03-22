@@ -19,7 +19,7 @@ jobs:
         tar -xf lilypond-${{ matrix.lilypond-version }}-linux-x86_64.tar.gz
 
     - name: Create PDFs
-      run: lilypond-${{ matrix.lilypond-version }}/bin/lilypond --output=test-${{ matrix.lilypond-version }} frameEngraver3.ly
+      run: lilypond-${{ matrix.lilypond-version }}/bin/lilypond --output=test-${{ matrix.lilypond-version }} test.ly
 
     - name: Archive PDFs
       uses: actions/upload-artifact@main
@@ -43,7 +43,7 @@ jobs:
         sudo sh lilypond-${{ matrix.lilypond-version }}-1.linux-64.sh --batch
 
     - name: Create PDFs
-      run: lilypond --output=test-${{ matrix.lilypond-version }} frameEngraver3.ly
+      run: lilypond --output=test-${{ matrix.lilypond-version }} test.ly
 
     - name: Archive PDFs
       uses: actions/upload-artifact@main
