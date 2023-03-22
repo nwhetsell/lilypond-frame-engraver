@@ -202,15 +202,15 @@ frameEnd =
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \relative c'' {
-  \override Stem #'transparent = ##t
-  \override Beam #'transparent = ##t
-  \once \override Frame #'extender-length = #8
+  \override Stem.transparent = ##t
+  \override Beam.transparent = ##t
+  \once \override Frame.extender-length = #8
   \frameStart dis'8[ e f \frameEnd ges] s2
-  \once \override Frame #'extender-length = #11
+  \once \override Frame.extender-length = #11
   \frameStart d,8[ e f \frameEnd g] s2
-  \once \override Staff.BarLine #'X-extent = #'(+inf.0 . -inf.0) % line can cross bar line
+  \once \override Staff.BarLine.X-extent = #'(+inf.0 . -inf.0) % line can cross bar line
   s2
-  \once \override Frame #'extender-length = #3.5
+  \once \override Frame.extender-length = #3.5
   \frameStart fis'8[ bes,, aes, \frameEnd e'']
 }
 
