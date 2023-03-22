@@ -91,7 +91,7 @@
                         ;; length of arrow, extra space before next element
          (axis-group-width (ly:axis-group-interface::width grob))
          (axis-group-width (coord-translate axis-group-width (cons padding-L padding-R))))
-         
+
   (if (eq? direction LEFT)
       (cons (- (car axis-group-width) 0.3 box-padding) (car axis-group-width))
       (cons (cdr axis-group-width) (+ (cdr axis-group-width) extender-length 0.3 box-padding correction)))))
@@ -224,5 +224,3 @@ frameEnd =
     \consists \frameEngraver
   }
 }
-
-
