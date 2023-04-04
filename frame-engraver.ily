@@ -131,7 +131,7 @@ frameEngraver =
 #(lambda (context)
    (let ((span '())
          (stub '())
-         (event-drul '(() . ())))
+         (event-drul (cons '() '())))
 
      `((listeners
          (frame-event .

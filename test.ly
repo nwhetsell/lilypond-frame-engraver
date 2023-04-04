@@ -2,6 +2,9 @@
 
 \include "frame-engraver.ily"
 
+\score {
+  <<
+    \new Staff {
 \relative c'' {
   \override Stem.transparent = ##t
   \override Beam.transparent = ##t
@@ -12,6 +15,26 @@
   s2
   \once \override Frame.extender-length = #3.5
   \frameStart fis'8[ bes,, aes, \frameEnd e'']
+}
+    }
+  >>
+}
+
+\score {
+  <<
+    \new Staff {
+      \relative {
+        \once \override Frame.extender-length = #8
+        \frameStart c'8[ d e \frameEnd f] s2
+      }
+    }
+    \new Staff {
+      \relative {
+        \once \override Frame.extender-length = #8
+        \frameStart c'8[ d e \frameEnd f] s2
+      }
+    }
+  >>
 }
 
 \layout {
