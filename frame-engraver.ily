@@ -131,7 +131,7 @@ frameEngraver =
 #(lambda (context)
    (let ((span '())
          (stub '())
-         (event-drul (cons '() '())))
+         (event-drul (cons '() '()))) ; drul means "down right up left"
 
      `((listeners
          (frame-event .
