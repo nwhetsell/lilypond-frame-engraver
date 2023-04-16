@@ -127,71 +127,65 @@
        (ly:spanner-set-bound! spanner LEFT item)
        (ly:spanner-set-bound! spanner RIGHT item)))
 
-frameEngraver =
-#(lambda (context)
-   (let ((span '())
+#(define (Frame_engraver context)
+       (let (
+         (span '())
          (stub '())
          (event-drul (cons '() '()))) ; drul means "down right up left"
 
-     `((listeners
-         (frame-event .
-           ,(lambda (engraver event)
+       (make-engraver
+         (listeners
+           ((frame-event engraver event)
              (if (= START (ly:event-property event 'span-direction))
                  (set-car! event-drul event)
-                 (set-cdr! event-drul event)))))
+                 (set-cdr! event-drul event))))
 
        (acknowledgers
-         (note-column-interface .
-           ,(lambda (engraver grob source-engraver)
+           ((note-column-interface engraver grob source-engraver)
              (if (ly:spanner? span)
                (begin
                    (ly:pointer-group-interface::add-grob span 'elements grob)
                    (add-bound-item span grob)))
              (if (ly:item? stub)
-                   (ly:pointer-group-interface::add-grob stub 'elements grob))))
-         (script-interface .
-           ,(lambda (engraver grob source-engraver)
+                   (ly:pointer-group-interface::add-grob stub 'elements grob)))
+           ((script-interface engraver grob source-engraver)
+             (if (ly:spanner? span)
+                 (ly:pointer-group-interface::add-grob span 'elements grob))
+             (if (ly:item? stub)
+                   (ly:pointer-group-interface::add-grob stub 'elements grob)))
+           ((dynamic-interface engraver grob source-engraver)
+             (if (ly:spanner? span)
+                 (ly:pointer-group-interface::add-grob span 'elements grob))
+             (if (ly:item? stub)
+                   (ly:pointer-group-interface::add-grob stub 'elements grob)))
+           ((inline-accidental-interface engraver grob source-engraver)
              (if (ly:spanner? span)
                  (ly:pointer-group-interface::add-grob span 'elements grob))
              (if (ly:item? stub)
                    (ly:pointer-group-interface::add-grob stub 'elements grob))))
-         (dynamic-interface .
-           ,(lambda (engraver grob source-engraver)
-             (if (ly:spanner? span)
-                 (ly:pointer-group-interface::add-grob span 'elements grob))
-             (if (ly:item? stub)
-                   (ly:pointer-group-interface::add-grob stub 'elements grob))))
-         (inline-accidental-interface .
-           ,(lambda (engraver grob source-engraver)
-             (if (ly:spanner? span)
-                 (ly:pointer-group-interface::add-grob span 'elements grob))
-             (if (ly:item? stub)
-                   (ly:pointer-group-interface::add-grob stub 'elements grob)))))
 
-       (process-music .
-         ,(lambda (trans)
+         ((process-music engraver)
            (if (ly:stream-event? (cdr event-drul))
                (if (null? span)
                    (ly:warning "No start to this box.")
-                   (ly:engraver-announce-end-grob trans span (cdr event-drul))))
+                   (ly:engraver-announce-end-grob engraver span (cdr event-drul))))
            (if (ly:stream-event? (car event-drul))
-               (begin (set! span (ly:engraver-make-grob trans 'Frame (car event-drul)))
-                      (set! stub (ly:engraver-make-grob trans 'FrameStub (car event-drul)))
+               (begin (set! span (ly:engraver-make-grob engraver 'Frame (car event-drul)))
+                      (set! stub (ly:engraver-make-grob engraver 'FrameStub (car event-drul)))
                       (ly:grob-set-object! stub 'frame span)
                       (ly:grob-set-property! stub 'direction LEFT)
                       (set-car! event-drul '())))
            (if (ly:stream-event? (cdr event-drul))
-               (begin (set! stub (ly:engraver-make-grob trans 'FrameStub (cdr event-drul)))
+               (begin (set! stub (ly:engraver-make-grob engraver 'FrameStub (cdr event-drul)))
                       (ly:grob-set-property! stub 'direction RIGHT)
-                      (ly:grob-set-object! stub 'frame span)))))
+                      (ly:grob-set-object! stub 'frame span))))
 
-       (stop-translation-timestep .
-         ,(lambda (trans)
+         ((stop-translation-timestep engraver)
              (set! stub '())
              (if (ly:stream-event? (cdr event-drul))
                  (begin
                    (set-cdr! event-drul '())
-                   (set! span '()))))))))
+                   (set! span '())))))))
 
 frameStart =
 #(make-span-event 'FrameEvent START)

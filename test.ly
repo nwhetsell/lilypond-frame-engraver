@@ -44,6 +44,6 @@
   }
   \context {
     \Voice
-    \consists \frameEngraver
+    \consists \Frame_engraver
   }
 }
